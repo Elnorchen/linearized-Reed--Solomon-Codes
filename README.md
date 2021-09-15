@@ -1,2 +1,3 @@
 # linearized-Reed--Solomon-Codes
 Sagemath code of the linearized Reed--Solomon codes with a generator encoder and a Welch--Berlekamp decoder
+There are three classes in this sage file: LinearizedRSCode, GeneratormatrixEncoder, WelchBerlekampDecoder. The LinearizedRSCode is used to construct a linearized Reed--Solomon code with certain parameters: length n, dimension k, number of blocks l, base field Fq, extension field Fqm, skew polynomial ring Fqm[x,sigma]. The GeneratormatrixEncoder is used to encode the given information vector and get the linearized Reed--Solomon codeword. The WelchBerlekampDecoder is used to decode a received word and get the transmitted information vector.
