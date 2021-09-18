@@ -14,7 +14,37 @@ class LinearizedRSCode(AbstractLinearCode):
     Class of the linearized Reed--Solomon codes $C_{LRS}[n,k]$
     
     INPUT:
-        -``
+         -``ground_field`` -- A finite field $\\GF{q}$ of a prime power order $q$
+         
+         -``extension_field`` -- A finite field $\\GF{q^m}$ which is an extension field of degree $m$ of $\\GF{q}$.
+         
+         -``length`` -- The length of the LRS Code, i.e., length $(n)$ should be less than or equal to $(m)$.
+         
+         -``dimension`` -- The dimesnion of the Gabidulin Code, i.e., dimension $(k)$ should be less than or equal to the length $(n)$.
+         
+         -``skew_polynomial_ring`` --the skew polynomial ring of the LRS code, i.e., skew_polynomial_ring $Fqm[x;\sigma]$.
+         
+         -``block_number`` -- number of blocks of the sum-rank metric. In other words, the sum-rank metric divides the code matrix into $l$ blocks
+       
+    EXAMPLE:
+        sage: load('linearized_RS.py')
+        sage: Fqm.<aa> = GF(8)
+        sage: Fq.<a> = GF(2)
+        sage: FE = RelativeFiniteFieldExtension(Fqm, Fq)
+        sage: n=3
+        sage: k=2
+        sage: l=1
+        sage: q=Fq.order()
+        sage: p=Fq.characteristic()
+        sage: Frob = Fqm.frobenius_endomorphism(log(q,p))
+        sage: L.<x>=Fqm['x',Frob]
+        sage: C=LinearizedRSCode(Fq,Fqm,L,n,k,l)
+        sage: C
+        Linearized Reed--Solomon Code LRS[3,2] over Finite Field in aa of size 2^3
+         
+    
+    
+    
     """
     
     _registered_encoders = {}
@@ -39,22 +69,112 @@ class LinearizedRSCode(AbstractLinearCode):
         self._relative_extension=FE
         
     def length(self):
+        r"""
+        Returns the length n of self
+        
+        EXAMPLES::
+        
+            sage: load('linearized_RS.py')
+            sage: Fqm.<aa> = GF(8)
+            sage: Fq.<a> = GF(2)
+            sage: FE = RelativeFiniteFieldExtension(Fqm, Fq)
+            sage: n=3
+            sage: k=2
+            sage: l=1
+            sage: q=Fq.order()
+            sage: p=Fq.characteristic()
+            sage: Frob = Fqm.frobenius_endomorphism(log(q,p))
+            sage: L.<x>=Fqm['x',Frob]
+            sage: C=LinearizedRSCode(Fq,Fqm,L,n,k,l)
+            sage: C.length()
+            
+            3
+        
+        
+        """
         return self._length
     
     def dimension(self):
+        r"""
+        Return the dimension k of self
+        
+        EXAMPLES:
+        
+            sage: load('linearized_RS.py')
+            sage: Fqm.<aa> = GF(8)
+            sage: Fq.<a> = GF(2)
+            sage: FE = RelativeFiniteFieldExtension(Fqm, Fq)
+            sage: n=3
+            sage: k=2
+            sage: l=1
+            sage: q=Fq.order()
+            sage: p=Fq.characteristic()
+            sage: Frob = Fqm.frobenius_endomorphism(log(q,p))
+            sage: L.<x>=Fqm['x',Frob]
+            sage: C=LinearizedRSCode(Fq,Fqm,L,n,k,l)
+            sage: C.dimension()
+            
+            2
+        
+        """
         return self._dimension
     
     def minimum_sum_rank_distance(self):
+        r"""
+        Return the minimum distance d of self
+        
+        EXAMPLES:
+        
+            sage: load('linearized_RS.py')
+            sage: Fqm.<aa> = GF(8)
+            sage: Fq.<a> = GF(2)
+            sage: FE = RelativeFiniteFieldExtension(Fqm, Fq)
+            sage: n=3
+            sage: k=2
+            sage: l=1
+            sage: q=Fq.order()
+            sage: p=Fq.characteristic()
+            sage: Frob = Fqm.frobenius_endomorphism(log(q,p))
+            sage: L.<x>=Fqm['x',Frob]
+            sage: C=LinearizedRSCode(Fq,Fqm,L,n,k,l)
+            sage: C.minimum_sum_rank_distance()
+            
+            2
+        
+        """
         return (self._length-self._dimension+1)
     
     def skew_polynomial_ring(self):
+        r"""
+        Return the skew polynomial ring Fqm[x;sigma] of self
+        
+        EXAMPLES:
+        
+            sage: load('linearized_RS.py')
+            sage: Fqm.<aa> = GF(8)
+            sage: Fq.<a> = GF(2)
+            sage: FE = RelativeFiniteFieldExtension(Fqm, Fq)
+            sage: n=3
+            sage: k=2
+            sage: l=1
+            sage: q=Fq.order()
+            sage: p=Fq.characteristic()
+            sage: Frob = Fqm.frobenius_endomorphism(log(q,p))
+            sage: L.<x>=Fqm['x',Frob]
+            sage: C=LinearizedRSCode(Fq,Fqm,L,n,k,l)
+            sage: C.skew_polynomial_ring()
+            
+            Skew Polynomial Ring in x over Finite Field in aa of size 2^3 twisted by aa |--> aa^2
+        
+        """
+        
         return self._skew_polynomial_ring
     
     def extension_field(self):
         r"""
-        Returns extension_field of ``self``
+        Returns extension_field of self
         
-        EXAMPLES:
+        EXAMPLES::
         
             sage: load('linearized_RS.py')
             sage: Fqm.<aa> = GF(2^4)
@@ -71,12 +191,33 @@ class LinearizedRSCode(AbstractLinearCode):
             sage: C.extesion_field()
             
             Finite Field in aa of size 2^4
-            
         """
         return self._extension_field
         
     
     def cardinality(self):
+        r"""
+        Return the cardinality of self
+        
+        EXAMPLES::
+        
+            sage: load('linearized_RS.py')
+            sage: Fqm.<aa> = GF(2^3)
+            sage: Fq.<a> = GF(2)
+            sage: FE = RelativeFiniteFieldExtension(Fqm, Fq)
+            sage: n=3
+            sage: k=2
+            sage: l=1
+            sage: q=Fq.order()
+            sage: p=Fq.characteristic()
+            sage: Frob = Fqm.frobenius_endomorphism(log(q,p))
+            sage: L.<x>=Fqm['x',Frob]
+            sage: C=LinearizedRSCode(Fq,Fqm,L,n,k,l)
+            sage: C.cardinality()
+            
+            64
+        
+        """
         m = self._extension_degree
         k = self._dimension
         q = self._ground_field.order()
@@ -84,25 +225,184 @@ class LinearizedRSCode(AbstractLinearCode):
         return C
     
     def number_of_blocks(self):
+        r"""
+        Return the number of blocks l of self
+        
+        EXAMPLES::
+        
+            sage: load('linearized_RS.py')
+            sage: Fqm.<aa> = GF(2^3)
+            sage: Fq.<a> = GF(2)
+            sage: FE = RelativeFiniteFieldExtension(Fqm, Fq)
+            sage: n=3
+            sage: k=2
+            sage: l=1
+            sage: q=Fq.order()
+            sage: p=Fq.characteristic()
+            sage: Frob = Fqm.frobenius_endomorphism(log(q,p))
+            sage: L.<x>=Fqm['x',Frob]
+            sage: C=LinearizedRSCode(Fq,Fqm,L,n,k,l)
+            sage: C.number_of_blocks()
+            
+            1
+        
+        """
+        
         return (self._block_number)
     
     def block_length(self):
+        r"""
+        Return the block length of self
+        
+        EXAMPLES::
+        
+            sage: load('linearized_RS.py')
+            sage: Fqm.<aa> = GF(2^3)
+            sage: Fq.<a> = GF(2)
+            sage: FE = RelativeFiniteFieldExtension(Fqm, Fq)
+            sage: n=3
+            sage: k=2
+            sage: l=1
+            sage: q=Fq.order()
+            sage: p=Fq.characteristic()
+            sage: Frob = Fqm.frobenius_endomorphism(log(q,p))
+            sage: L.<x>=Fqm['x',Frob]
+            sage: C=LinearizedRSCode(Fq,Fqm,L,n,k,l)
+            sage: C.block_length()
+            
+            3
+        
+        """
         return (self._length//self._block_number)
     
     def Frobenuis_endomorphism(self):
+        r"""
+        Return the Frobenuis endomorphism sigma of self
+        
+        EXAMPLES::
+        
+            sage: load('linearized_RS.py')
+            sage: Fqm.<aa> = GF(2^3)
+            sage: Fq.<a> = GF(2)
+            sage: FE = RelativeFiniteFieldExtension(Fqm, Fq)
+            sage: n=3
+            sage: k=2
+            sage: l=1
+            sage: q=Fq.order()
+            sage: p=Fq.characteristic()
+            sage: Frob = Fqm.frobenius_endomorphism(log(q,p))
+            sage: L.<x>=Fqm['x',Frob]
+            sage: C=LinearizedRSCode(Fq,Fqm,L,n,k,l)
+            sage: C.Frobenuis_endomorphism()
+            
+            Frobenius endomorphism aa |--> aa^2 on Finite Field in aa of size 2^3
+        
+        """
         return self._Frob
     
     
     def ground_field(self):
+        r"""
+        Return the ground field Fq of self
+        
+        EXAMPLES::
+        
+            sage: load('linearized_RS.py')
+            sage: Fqm.<aa> = GF(2^3)
+            sage: Fq.<a> = GF(2)
+            sage: FE = RelativeFiniteFieldExtension(Fqm, Fq)
+            sage: n=3
+            sage: k=2
+            sage: l=1
+            sage: q=Fq.order()
+            sage: p=Fq.characteristic()
+            sage: Frob = Fqm.frobenius_endomorphism(log(q,p))
+            sage: L.<x>=Fqm['x',Frob]
+            sage: C=LinearizedRSCode(Fq,Fqm,L,n,k,l)
+            sage: C.ground_field()
+            
+            Finite Field of size 2
+        
+        """
         return self._ground_field
     
     def extension_field(self):
+        r"""
+        Return the extension field Fqm of self
+        
+        EXAMPLES::
+        
+            sage: load('linearized_RS.py')
+            sage: Fqm.<aa> = GF(2^3)
+            sage: Fq.<a> = GF(2)
+            sage: FE = RelativeFiniteFieldExtension(Fqm, Fq)
+            sage: n=3
+            sage: k=2
+            sage: l=1
+            sage: q=Fq.order()
+            sage: p=Fq.characteristic()
+            sage: Frob = Fqm.frobenius_endomorphism(log(q,p))
+            sage: L.<x>=Fqm['x',Frob]
+            sage: C=LinearizedRSCode(Fq,Fqm,L,n,k,l)
+            sage: C.extension_field()
+            
+            Finite Field in aa of size 2^3
+        
+        """
         return self._extension_field
     
     def extension_degree(self):
+        r"""
+        Return the extension degree m of self
+        
+        EXAMPLES::
+        
+            sage: load('linearized_RS.py')
+            sage: Fqm.<aa> = GF(2^3)
+            sage: Fq.<a> = GF(2)
+            sage: FE = RelativeFiniteFieldExtension(Fqm, Fq)
+            sage: n=3
+            sage: k=2
+            sage: l=1
+            sage: q=Fq.order()
+            sage: p=Fq.characteristic()
+            sage: Frob = Fqm.frobenius_endomorphism(log(q,p))
+            sage: L.<x>=Fqm['x',Frob]
+            sage: C=LinearizedRSCode(Fq,Fqm,L,n,k,l)
+            sage: C.extension_degree()
+            
+            3
+        
+        """
         return self._extension_degree
     
     def map_into_ground_field(self, vector):
+        r"""
+        Change an input vector v1 defined in extension field into a vector in ground field
+        
+        EXAMPLES::
+        
+            sage: load('linearized_RS.py')
+            sage: Fqm.<aa> = GF(2^3)
+            sage: Fq.<a> = GF(2)
+            sage: FE = RelativeFiniteFieldExtension(Fqm, Fq)
+            sage: n=3
+            sage: k=2
+            sage: l=1
+            sage: q=Fq.order()
+            sage: p=Fq.characteristic()
+            sage: Frob = Fqm.frobenius_endomorphism(log(q,p))
+            sage: L.<x>=Fqm['x',Frob]
+            sage: C=LinearizedRSCode(Fq,Fqm,L,n,k,l)
+            sage: v=[aa^2,aa^0,aa]  ## Note that here we use aa^0 to replace 1. Otherwise there will be an error.
+            sage: C.map_into_ground_field(v)
+            
+            [0 0 1]
+            [1 0 0]
+            [0 1 0]
+        
+        """
+        
         FE = self._relative_extension
         vector_length = len(vector)
         for i in range(vector_length):
@@ -111,10 +411,34 @@ class LinearizedRSCode(AbstractLinearCode):
         vector_ground = []
         for i in range(vector_length):
             vector_ground.append(FE.relative_field_representation(vector[i]))
-        print(vector_ground)
+        #print(vector_ground)
         return matrix(vector_ground)
     
     def sum_rank_weight(self, codeword_vector):
+        r"""
+        Return the sum rank weight of a vector in Fqm
+        
+        EXAMPLES::
+        
+            sage: load('linearized_RS.py')
+            sage: Fqm.<aa> = GF(2^3)
+            sage: Fq.<a> = GF(2)
+            sage: FE = RelativeFiniteFieldExtension(Fqm, Fq)
+            sage: n=3
+            sage: k=2
+            sage: l=1
+            sage: q=Fq.order()
+            sage: p=Fq.characteristic()
+            sage: Frob = Fqm.frobenius_endomorphism(log(q,p))
+            sage: L.<x>=Fqm['x',Frob]
+            sage: C=LinearizedRSCode(Fq,Fqm,L,n,k,l)
+            sage: v=[aa^2,aa^0,aa]  ## Note that here we use aa^0 to replace 1. Otherwise there will be an error.
+            sage: C.map_into_ground_field(v)
+            
+            3
+        
+        """
+        
         codeword_matrix=self.map_into_ground_field(codeword_vector)
         l=self._block_number
         s=self.block_length()
@@ -127,10 +451,36 @@ class LinearizedRSCode(AbstractLinearCode):
         return sum_rank_wt
         
     def sum_rank_distance(self, vector1, vector2):
+        r"""
+        Return the sum rank distance of two vectors in Fqm
+        
+        EXAMPLES::
+        
+            sage: load('linearized_RS.py')
+            sage: Fqm.<aa> = GF(2^3)
+            sage: Fq.<a> = GF(2)
+            sage: FE = RelativeFiniteFieldExtension(Fqm, Fq)
+            sage: n=3
+            sage: k=2
+            sage: l=1
+            sage: q=Fq.order()
+            sage: p=Fq.characteristic()
+            sage: Frob = Fqm.frobenius_endomorphism(log(q,p))
+            sage: L.<x>=Fqm['x',Frob]
+            sage: C=LinearizedRSCode(Fq,Fqm,L,n,k,l)
+            sage: v1=[aa^2,aa^0,aa]  ## Note that here we use aa^0 to replace 1. Otherwise there will be an error.
+            sage: v2=[aa^0,aa^0,aa^0]
+            sage: C.map_into_ground_field(v1,v2)
+            
+            2
+
+        
+        """
         codeword_matrix1=self.map_into_ground_field(vector1)
         codeword_matrix2=self.map_into_ground_field(vector2)
         cw_matrix=codeword_matrix1-codeword_matrix2
-        print("cwmatrix=",cw_matrix)
+        #print("vector matrix=")
+        #print(cw_matrix)      #these two lines output the difference matrix of two input vectors
         l=self._block_number
         s=self.block_length()
         sub_blocks1=[]
@@ -142,14 +492,90 @@ class LinearizedRSCode(AbstractLinearCode):
         return sum_rank_wt
        
     def get_independent_sets(self):
+        r"""
+        Return the independent sets Beta of self. Note that the initial value of independent sets is 0. The self.generator_matrix should be implemented    first to do the assignment
+        
+        EXAMPLES::
+        
+            sage: load('linearized_RS.py')
+            sage: Fqm.<aa> = GF(2^3)
+            sage: Fq.<a> = GF(2)
+            sage: FE = RelativeFiniteFieldExtension(Fqm, Fq)
+            sage: n=3
+            sage: k=2
+            sage: l=1
+            sage: q=Fq.order()
+            sage: p=Fq.characteristic()
+            sage: Frob = Fqm.frobenius_endomorphism(log(q,p))
+            sage: L.<x>=Fqm['x',Frob]
+            sage: C=LinearizedRSCode(Fq,Fqm,L,n,k,l)
+            sage: E=C.encoder("GeneratormatrixEncoder")
+            sage: b=[[aa^0,aa,aa^1]]     #note that here we have two pairs of brackets
+            sage: G=C.generator_matrix(b)
+            sage: C.get_independent_sets()
+            
+            [[1, aa, aa^2]]
+        
+        """
         return self._independent_sets
     
     def Dab(self,element1, element2):
+        r"""
+        Return the result of linear operator Dab=sigma(b)a
+        
+        EXAMPLES::
+        
+            sage: load('linearized_RS.py')
+            sage: Fqm.<aa> = GF(2^3)
+            sage: Fq.<a> = GF(2)
+            sage: FE = RelativeFiniteFieldExtension(Fqm, Fq)
+            sage: n=3
+            sage: k=2
+            sage: l=1
+            sage: q=Fq.order()
+            sage: p=Fq.characteristic()
+            sage: Frob = Fqm.frobenius_endomorphism(log(q,p))
+            sage: L.<x>=Fqm['x',Frob]
+            sage: C=LinearizedRSCode(Fq,Fqm,L,n,k,l)
+            sage: b=aa  
+            sage: c=aa^2
+            sage: C.Dab(b,c)
+            
+            aa^2 + aa + 1   ## note that aa^5=aa^2+aa+1
+
+        
+        """
         dd=self._Frob(element2)*element1 ##this is the linear operator D_a(b)=sigma(b)a in thesis
         
         return dd
     
     def Dab_power(self,element1,element2,power):
+        r"""
+        Return the ith power of linear operator (Dab)^i=sigma^i(b)sigma^{i-1}(a)...sigma(a)a
+        
+        EXAMPLES::
+        
+            sage: load('linearized_RS.py')
+            sage: Fqm.<aa> = GF(2^3)
+            sage: Fq.<a> = GF(2)
+            sage: FE = RelativeFiniteFieldExtension(Fqm, Fq)
+            sage: n=3
+            sage: k=2
+            sage: l=1
+            sage: q=Fq.order()
+            sage: p=Fq.characteristic()
+            sage: Frob = Fqm.frobenius_endomorphism(log(q,p))
+            sage: L.<x>=Fqm['x',Frob]
+            sage: C=LinearizedRSCode(Fq,Fqm,L,n,k,l)
+            sage: b=aa  
+            sage: c=aa^2
+            sage: C.Dab_power(b,c,3)
+            
+            aa^2  ## note that aa^23=aa^2
+
+        
+        """
+        
         a=element1     ########this is the power of operator D_a(b). D^n_a(b)=sigma^n(b)sigma^(n-1)(a)....sigma(a)a
         b=element2
         if power> 0:
@@ -166,6 +592,9 @@ class LinearizedRSCode(AbstractLinearCode):
         
     
     def Independent_Sets(self):
+        r"""
+        Assign the independent sets of self with random normal basis
+        """
         m=self._extension_degree
         FE=self._extension
         sets=[]
@@ -180,11 +609,38 @@ class LinearizedRSCode(AbstractLinearCode):
                 sets.append(random.sample(FieldBasis,s))    ##every element in sets is a independent set in Fqm
         else:
             sets=FieldBasis
-            ###here there is an error about the type of s. Maybe I can use another function to do this. But I don't know which function can I use.
+            
         self._independent_sets=sets
         return sets
     
     def generator_matrix(self, independent_sets=None):
+        r"""
+        Creat and return the generator matrix of the LRS code
+        
+        EXAMPLES::
+        
+            sage: load('linearized_RS.py')
+            sage: Fqm.<aa> = GF(2^3)
+            sage: Fq.<a> = GF(2)
+            sage: FE = RelativeFiniteFieldExtension(Fqm, Fq)
+            sage: n=3
+            sage: k=2
+            sage: l=1
+            sage: q=Fq.order()
+            sage: p=Fq.characteristic()
+            sage: Frob = Fqm.frobenius_endomorphism(log(q,p))
+            sage: L.<x>=Fqm['x',Frob]
+            sage: C=LinearizedRSCode(Fq,Fqm,L,n,k,l)
+            sage: E=C.encoder("GeneratormatrixEncoder")
+            sage: b=[[aa^0,aa,aa^1]]     #note that here we have two brackets
+            sage: G=C.generator_matrix(b)   ## We strongly advice to assign the independent sets
+            sage: G
+            
+            [   1   aa   aa]
+            [   1 aa^2 aa^2]
+
+        
+        """
         ## independent_sets shall be written as [[1,alpha,alpha^2],[alpha,alpha^3,1]]
         l=self._block_number
         k=self._dimension
@@ -235,6 +691,32 @@ class LinearizedRSCode(AbstractLinearCode):
         return G
     
     def precomputing_polynomials(self,basis,r):## r=[r1,r2,...,rk]
+        r"""
+        calculate and return the minimum skew polynomial Fk and the Lagrange interpolating polynomial G
+        
+        EXAMPLES::
+        
+            sage: load('linearized_RS.py')
+            sage: Fqm.<aa> = GF(2^3)
+            sage: Fq.<a> = GF(2)
+            sage: FE = RelativeFiniteFieldExtension(Fqm, Fq)
+            sage: n=3
+            sage: k=2
+            sage: l=1
+            sage: q=Fq.order()
+            sage: p=Fq.characteristic()
+            sage: Frob = Fqm.frobenius_endomorphism(log(q,p))
+            sage: L.<x>=Fqm['x',Frob]
+            sage: C=LinearizedRSCode(Fq,Fqm,L,n,k,l)
+            sage: E=C.encoder("GeneratormatrixEncoder")
+            sage: b=[aa^0,aa,aa^1]     #note that here we have only one pair of brackets
+            sage: r=[aa,aa^2,aa]
+            sage: C.precomputing_polynomials(b,r)   ## We strongly advice to assign the independent sets
+            
+            
+            [aa*x, x^2 + (aa^2 + aa + 1)*x + aa^2 + aa] ##the first element of this list is G, the second element is Fk
+        
+        """
         k=self._dimension
         FE=self._extension
         Fqm=self._extension_field
@@ -257,12 +739,39 @@ class LinearizedRSCode(AbstractLinearCode):
         P=[]
         P.append(G)
         P.append(F)
-        return P   ####P[0]是G，P[1]是F
+        return P   ####P[0] is G，P[1] is F
     
     def code_space(self):
+        r"""
+        Return the code space of self
+        """
         return VectorSpace(self.extension_field(),self.length())
     
     def LRS_TO_SKEW(self,received_word):
+        r"""
+        Translate the received word into skew Reed--Solomon code case, and translate the independent sets into P-basis. Note that the independent sets of self should be assigned before you run this self.LRS_TO_SKEW method. So far, this method is only used in the decoding algorithm
+        
+        EXAMPLE::
+            sage: load('linearized_RS.py')
+            sage: Fqm.<aa> = GF(8)
+            sage: Fq.<a> = GF(2)
+            sage: FE = RelativeFiniteFieldExtension(Fqm, Fq)
+            sage: n=3
+            sage: k=2
+            sage: l=1
+            sage: q=Fq.order()
+            sage: p=Fq.characteristic()
+            sage: Frob = Fqm.frobenius_endomorphism(log(q,p))
+            sage: L.<x>=Fqm['x',Frob]
+            sage: C=LinearizedRSCode(Fq,Fqm,L,n,k,l)
+            sage: b=[[aa^0,aa,aa^1]]     #note that here we have two pair of brackets
+            sage: r=[aa,aa^2,aa]
+            sage: C.generator_matrix(b)  ##we run the self.generator_marix first in order to assign the independent sets.
+            sage: C.LRS_TO_SKEW(r)
+            
+            [[aa, aa, 1], [1, aa, aa]]  #the first element is received word in skew Reed--Somon code form. The second element is the P-basis
+        
+        """
         y=np.mat(received_word)
         y=y.tolist()
         y=y[0]
@@ -349,6 +858,39 @@ class GeneratormatrixEncoder(Encoder):
             return "Generator matrix based encoder for %s" % self.code()
         
         def encode(self,Generator,information):
+            r"""
+              encode using generator matrix
+        
+        EXAMPLES::
+        
+            sage: load('linearized_RS.py')
+            sage: Fqm.<aa> = GF(2^4)
+            sage: Fq.<a> = GF(2)
+            sage: FE = RelativeFiniteFieldExtension(Fqm, Fq)
+            sage: n=4
+            sage: k=2
+            sage: l=1
+            sage: q=Fq.order()
+            sage: p=Fq.characteristic()
+            sage: Frob = Fqm.frobenius_endomorphism(log(q,p))
+            sage: L.<x>=Fqm['x',Frob]
+            sage: C=LinearizedRSCode(Fq,Fqm,L,n,k,l)
+            sage: E=C.encoder("GeneratormatrixEncoder")
+            sage: b=[[aa^0,aa,aa^3,aa^2]]     #note that here we have two brackets
+            sage: G=C.generator_matrix(b)   
+            sage: E=C.encoder("GeneratormatrixEncoder")
+            sage: c=[aa,aa^2]        ##c is the information vector
+            sage: y=E.encode(G,c)
+            sage: y
+            
+            the information vector is [  aa aa^2]
+            the generator matrix is 
+            [          1          aa        aa^3        aa^2]
+            [          1        aa^2 aa^3 + aa^2      aa + 1]
+
+            [    aa^2 + aa aa^2 + aa + 1     aa^2 + aa          aa^2] ##this is the codeword
+        
+        """
             C=self.code()
             k=C.dimension()
             i=information
@@ -390,6 +932,48 @@ class WelchBerlekampDecoder(Decoder):
         return "\\textnormal{decoder for }%s" % self.code()._latex_()
     
     def decode_to_message(self,received_word):##received_word and basis in list form
+        r"""
+        Decode the received word into the information vector. Note that at least an transmitting error with sum-rank weight 1 should be added to the received word. Otherwise, there might be errors in running the decoder.
+        
+        EXAMPLES::
+        
+            sage: load('linearized_RS.py')
+            sage: Fqm.<aa> = GF(2^4)
+            sage: Fq.<a> = GF(2)
+            sage: FE = RelativeFiniteFieldExtension(Fqm, Fq)
+            sage: n=4
+            sage: k=2
+            sage: l=1
+            sage: q=Fq.order()
+            sage: p=Fq.characteristic()
+            sage: Frob = Fqm.frobenius_endomorphism(log(q,p))
+            sage: L.<x>=Fqm['x',Frob]
+            sage: C=LinearizedRSCode(Fq,Fqm,L,n,k,l)
+            sage: E=C.encoder("GeneratormatrixEncoder")
+            sage: b=[[aa^0,aa,aa^3,aa^2]]     #note that here we have two brackets
+            sage: G=C.generator_matrix(b)   
+            sage: E=C.encoder("GeneratormatrixEncoder")
+            sage: D=C.decoder("WelchBerlekampDecoder")
+            sage: c=[aa,aa^2]        ##c is the information vector
+            sage: y=E.encode(G,c)    ## here y is [aa^2 + aa, aa^2 + aa + 1, aa^2 + aa,aa^2] according to the example in the self.encode()
+            sage: i=D.decode_to_message([aa^2+aa,aa^2+aa,aa^2+aa,aa^2]) ##put an error [0,1,0,0] to the received word
+            sage: i
+            
+            the information vector is [  aa aa^2]
+            the generator matrix is 
+            [          1          aa        aa^3        aa^2]
+            [          1        aa^2 aa^3 + aa^2      aa + 1]
+            Fk= x^2 + (aa^2 + aa + 1)*x + aa^2 + aa
+            G= (aa + 1)*x + aa^2 + 1
+            Q= (aa^2 + aa + 1)*x^2 + aa^3 + aa + 1
+            L= (aa^3 + aa^2)*x + aa^3 + aa^2
+            Y= aa^2*x + aa
+            R= 0
+               
+            [aa, aa^2]  ##the information vector getting from decoding
+
+        
+        """
         C=self.code()
         n=C.length()
         k=C.dimension()
